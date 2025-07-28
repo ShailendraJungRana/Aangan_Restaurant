@@ -1,0 +1,37 @@
+{
+    "name": "MenuItem",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name of the food item"
+      },
+      "description": {
+        "type": "string",
+        "description": "Brief description of the food item"
+      },
+      "price": {
+        "type": "number",
+        "description": "Price of the food item"
+      },
+      "image_url": {
+        "type": "string",
+        "description": "URL of the food image"
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snacks"
+        ],
+        "description": "Food category"
+      }
+    },
+    "required": [
+      "name",
+      "description",
+      "price"
+    ]
+  }

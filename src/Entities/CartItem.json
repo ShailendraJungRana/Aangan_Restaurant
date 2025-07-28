@@ -1,0 +1,23 @@
+{
+    "name": "CartItem",
+    "type": "object",
+    "properties": {
+      "menu_item_id": {
+        "type": "string",
+        "description": "ID of the menu item"
+      },
+      "quantity": {
+        "type": "number",
+        "description": "Quantity of the item in cart",
+        "default": 1
+      },
+      "user_email": {
+        "type": "string",
+        "description": "Email of the user who added the item"
+      }
+    },
+    "required": [
+      "menu_item_id",
+      "user_email"
+    ]
+  }
