@@ -39,12 +39,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link to={createPageUrl("Our Chef")} className="text-stone-300 hover:text-emerald-400 transition-colors">
-                  Our Chef
+                  Our Staff
                 </Link>
               </li>
               <li>
                 <Link to={createPageUrl("Secure Shopping")} className="text-stone-300 hover:text-emerald-400 transition-colors">
-                  Secure Shopping
+                  Home Delivery
                 </Link>
               </li>
               <li>
@@ -61,7 +61,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link to={createPageUrl("Careers")} className="text-stone-300 hover:text-emerald-400 transition-colors">
-                  Careers
+                  Details
                 </Link>
               </li>
               <li>
