@@ -1,26 +1,37 @@
 import React from "react";
 import { MapPin, Clock, Phone } from "lucide-react";
+import aaganB from "../assets/Aangan.png";
 
 const outlets = [
   {
     id: 1,
-    name: "Aangan Downtown",
-    address: "123 Main Street, Downtown City",
-    hours: "10:00 AM - 11:00 PM",
-    phone: "+1 (555) 123-4567",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
-    description: "Our flagship location in the heart of downtown, featuring traditional ambiance and full menu.",
-    mapUrl: "https://maps.google.com/?q=123+Main+Street+Downtown+City"
+    name: "Aangan Bardaghat",
+    address: "Bardaghat-04, Nawalparasi, Nepal",
+    hours: "10:00 AM - 10:00 PM",
+    phone: "+977-9749795695",
+    src: aaganB,
+    description: "Located beside Bardaghat Municipality, featuring separate cabins for families, friends, and couples, along with delicious food items.",
+    mapUrl: "https://maps.app.goo.gl/GLhrji5iJTHqhNQe6"
   },
   {
     id: 2,
-    name: "Aangan Suburbs",
-    address: "456 Oak Avenue, Suburban Plaza",
-    hours: "11:00 AM - 10:00 PM",
-    phone: "+1 (555) 987-6543",
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
-    description: "Family-friendly location with spacious seating and dedicated kids' area.",
-    mapUrl: "https://maps.google.com/?q=456+Oak+Avenue+Suburban+Plaza"
+    name: "Aangan Resort ",
+    address: "Baruwa, Nawalparasi, Nepal",
+    hours: "10:00 AM - 10:00 PM",
+    phone: "+977-9749795695",
+    src: aaganB,
+    description: "Located in a serene area with spacious seating, Friday night DJ parties, and delicious food items.",
+    mapUrl: "https://maps.app.goo.gl/jfeh8o1LqhgoJvYP7"
+  },
+  {
+    id: 3,
+    name: "Aangan Home Stay ",
+    address: "Badipidit, Nawalparasi, Nepal",
+    hours: "8:00 AM - 12:00 PM",
+    phone: "+977-9749795695",
+    src: aaganB,
+    description: "Aangan Home Stay — perfect for parties, chill nights, and cozy getaways with your favorite people.",
+    mapUrl: "https://maps.app.goo.gl/jfeh8o1LqhgoJvYP7"
   }
 ];
 
