@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter } from "lucide-react";
-import { createPageUrl } from "@/utils";
+import { createPageUrl } from "@/utils/index.js";
 
 export default function Footer() {
   return (
