@@ -1,5 +1,5 @@
 // src/pages/Cart.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 import qrImage from "../assets/QR.jpg"; // Add a QR image
 
@@ -32,11 +32,11 @@ const Cart = () => {
               {cartItems.map((item, idx) => (
                 <li key={idx} className="flex justify-between py-2 border-b">
                   <span>{item.title}</span>
-                  <span>Rs. {item.price}</span>
+                  <span>Rs {item.price}</span>
                 </li>
               ))}
             </ul>
-            <p className="text-lg font-semibold mb-4">Total: Rs. {total}</p>
+            <p className="text-lg font-semibold mb-4">Total: Rs {total}</p>
   
             {!orderConfirmed && (
               <button
@@ -56,7 +56,7 @@ const Cart = () => {
               <h3 className="text-xl font-bold mb-2 text-green-600">Order Placed!</h3>
               <p className="text-gray-700 mb-2">
                 Scan the QR code to pay <br />
-                <span className="font-semibold text-lg">Rs. {total}</span>
+                <span className="font-semibold text-lg">Rs {total}</span>
               </p>
               <img src={qrImage} alt="QR Code" className="w-48 h-48 mx-auto mb-3" />
               <p className="text-xs text-gray-500">Use Khalti / eSewa / IMEpay or any scanner app.</p>

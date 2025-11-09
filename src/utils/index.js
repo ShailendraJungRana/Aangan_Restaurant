@@ -12,7 +12,8 @@ export const createPageUrl = (pageName) => {
     Booking: '/booking',
     Delivery: '/delivery',
     Catering: '/catering',
-    Order: '/order'
+    Order: '/order',
+    OrderNow: '/ordernow'
   };
   
   return pageMap[pageName] || '/';

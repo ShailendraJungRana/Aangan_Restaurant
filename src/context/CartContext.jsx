@@ -7,15 +7,24 @@ const CartContext = createContext();
 // 2. Create Provider
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Add to cart
   const addToCart = (item) => {
     setCartItems((prev) => [...prev, item]);
   };
 
-  // Remove from cart
+  // Remove from cart (removes one item at a time)
   const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    setCartItems((prev) => {
+      const index = prev.findIndex((item) => item.id === id);
+      if (index > -1) {
+        const newCart = [...prev];
+        newCart.splice(index, 1);
+        return newCart;
+      }
+      return prev;
+    });
   };
 
   // Clear cart
@@ -23,8 +32,26 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
+  // Open cart drawer
+  const openCart = () => {
+    setIsCartOpen(true);
+  };
+
+  // Close cart drawer
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ 
+      cartItems, 
+      addToCart, 
+      removeFromCart, 
+      clearCart,
+      isCartOpen,
+      openCart,
+      closeCart
+    }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils/index.js";
+import { useCart } from "../context/CartContext";
 import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 // import {
@@ -11,8 +12,10 @@ import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
 // } from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { cartItems } = useCart();
   const [isOpen, setIsOpen] = useState(false);
-  const [cartCount] = useState(0); // You can connect this to your cart context later
+  const cartCount = cartItems.length;
 
   return (
     <nav className="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
@@ -70,7 +73,10 @@ const Navbar = () => {
 
         {/* Cart Icon - Always Visible */}
         <div className="flex items-center space-x-4">
-          <button className="relative p-2 hover:bg-stone-100 rounded-md transition-colors">
+          <button 
+            onClick={() => navigate('/ordernow')}
+            className="relative p-2 hover:bg-stone-100 rounded-md transition-colors"
+          >
             <ShoppingCart className="w-5 h-5 text-stone-700" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">

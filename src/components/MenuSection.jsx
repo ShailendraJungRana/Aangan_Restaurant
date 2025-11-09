@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useCart } from "../context/CartContext";
 // import { MenuItem } from "@/entities/MenuItem";
 // import { Button } from "@/components/ui/button";
 // import { Badge } from "@/components/ui/badge";
@@ -66,7 +67,9 @@ const mockMenuItems = [
 ];
 
 export default function MenuSection() {
+  const { addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('recommended');
+  const [showAllProducts, setShowAllProducts] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -87,13 +90,22 @@ export default function MenuSection() {
     }
   };
 
-  const filteredItems = activeCategory === 'recommended' 
-    ? menuItems.slice(0, 6) 
-    : menuItems.filter(item => item.category === activeCategory);
+  // Get filtered items based on category or show all
+  const getFilteredItems = () => {
+    if (showAllProducts) {
+      return menuItems; // Show all items
+    }
+    if (activeCategory === 'recommended') {
+      return menuItems.slice(0, 6); // Show first 6 items for recommended
+    }
+    return menuItems.filter(item => item.category === activeCategory);
+  };
 
-  const addToCart = async (item) => {
-    // Cart functionality would be implemented here
-    console.log('Added to cart:', item);
+  const filteredItems = getFilteredItems();
+
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    // Optional: Show a toast notification here
   };
 
   return (
@@ -108,27 +120,47 @@ export default function MenuSection() {
             Choose Your Best Menus
           </h2>
           
-          {/* Category Tabs */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveCategory(category.id)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                  activeCategory === category.id
-                    ? 'bg-emerald-600 text-white shadow-lg'
-                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                }`}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
+          {/* Category Tabs - Hide when showing all products */}
+          {!showAllProducts && (
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setActiveCategory(category.id);
+                    setShowAllProducts(false);
+                  }}
+                  className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
+                    activeCategory === category.id
+                      ? 'bg-emerald-600 text-white shadow-lg'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="flex justify-end mb-8">
-            <button className="text-emerald-600 hover:text-emerald-700 underline">
-              See All Products →
-            </button>
+            {!showAllProducts ? (
+              <button 
+                onClick={() => setShowAllProducts(true)}
+                className="text-emerald-600 hover:text-emerald-700 underline font-medium transition-colors"
+              >
+                See All Menus →
+              </button>
+            ) : (
+              <button 
+                onClick={() => {
+                  setShowAllProducts(false);
+                  setActiveCategory('recommended');
+                }}
+                className="text-emerald-600 hover:text-emerald-700 underline font-medium transition-colors"
+              >
+                Show Less ←
+              </button>
+            )}
           </div>
         </div>
 
@@ -171,10 +203,10 @@ export default function MenuSection() {
                   
                   <div className="flex justify-between items-center">
                     <div className="text-2xl font-bold text-emerald-600">
-                      ${item.price}
+                      Rs {item.price}
                     </div>
                     <button 
-                      onClick={() => addToCart(item)}
+                      onClick={() => handleAddToCart(item)}
                       className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:shadow-lg flex items-center gap-2"
                     >
                       <Plus className="w-4 h-4" />

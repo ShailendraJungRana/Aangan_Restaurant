@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -27,6 +28,7 @@ const carouselData = [
 ];
 
 export default function HeroCarousel() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -66,12 +68,14 @@ export default function HeroCarousel() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
                 type="button"
+                onClick={() => navigate('/ordernow')}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Order Now
               </button>
               <button 
                 type="button"
+                onClick={() => navigate('/ordernow')}
                 className="border border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300"
               >
                 View Menu
