@@ -12,8 +12,8 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-emerald-400">AANGAN</h3>
             <p className="text-stone-300 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Aangan Restaurant, serving Bardaghat for over a decade, is well-known for delicious food, 
+            cherished moments, and lasting memories, conveniently located near Bardaghat Municipality.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-stone-400 hover:text-emerald-400 transition-colors">
@@ -85,7 +85,7 @@ export default function Footer() {
 
         <div className="border-t border-stone-800 mt-8 pt-8 text-center">
           <p className="text-stone-400">
-            © 2024 Aangan Restaurant. All rights reserved.
+            © 2025 Aangan Restaurant. All rights reserved.
           </p>
         </div>
       </div>

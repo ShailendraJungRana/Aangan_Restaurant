@@ -26,7 +26,7 @@ const outlets = [
   {
     id: 3,
     name: "Aangan Home Stay ",
-    address: "Badipidit, Nawalparasi, Nepal",
+    address: "Bidhut, Nawalparasi, Nepal",
     hours: "8:00 AM - 12:00 PM",
     phone: "+977-9749795695",
     src: aaganB,
