@@ -1,0 +1,10 @@
+
+version: "3.8"
+
+services:
+  aangan-restaurant:
+    image: shailendrajr/test_hub:v1
+    container_name: aangan_app-1
+    ports:
+      - "8080:80"
+    restart: unless-stopped
