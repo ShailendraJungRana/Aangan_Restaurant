@@ -1,1 +1,1 @@
-ec2-1 ansible_host=34.228.161.114 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem
+ec2-1 ansible_host=54.196.140.173 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem

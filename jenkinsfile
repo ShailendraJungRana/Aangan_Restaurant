@@ -4,17 +4,18 @@ pipeline {
     environment {
         IMAGE_NAME = "shailendrajr/test_hub:v1"
         CONTAINER_NAME = "aangan-react-container"
+        DOCKERHUB_CREDS = credentials("dockerhub-creds")
     }
 
     stages {
 
-        stage('Checkout Code') {
+        stage("Checkout Code") {
             steps {
                 checkout scm
             }
         }
 
-        stage('Build Docker Image') {
+        stage("Build Docker Image") {
             steps {
                 sh '''
                     docker build -t $IMAGE_NAME .
@@ -22,13 +23,36 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage("Trivy Image Scan") {
             steps {
                 sh '''
-                    # Stop and remove old container if exists
+                    echo "🔍 Scanning Docker image using Trivy..."
+                    trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME
+                '''
+            }
+        }
+
+        stage("Docker Hub Login") {
+            steps {
+                sh '''
+                    echo "$DOCKERHUB_CREDS_PSW" | docker login -u "$DOCKERHUB_CREDS_USR" --password-stdin
+                '''
+            }
+        }
+
+        stage("Push Image to Docker Hub") {
+            steps {
+                sh '''
+                    docker push $IMAGE_NAME
+                '''
+            }
+        }
+
+        stage("Run Docker Container") {
+            steps {
+                sh '''
                     docker rm -f $CONTAINER_NAME || true
 
-                    # Run new container
                     docker run -d \
                       --name $CONTAINER_NAME \
                       -p 3000:80 \
@@ -40,10 +64,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Application is running on Jenkins server at port 3000"
+            echo "✅ Image scanned, pushed to Docker Hub & app running on port 3000"
         }
         failure {
-            echo "❌ Build or run failed"
+            echo "❌ Pipeline failed (Scan / Build / Push error)"
         }
     }
 }
