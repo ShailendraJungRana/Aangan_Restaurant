@@ -9,7 +9,7 @@ const mockMenuItems = [
     id: 1,
     name: "Chicken Biryani",
     description: "Aromatic rice dish with tender chicken and exotic spices",
-    price: 15.99,
+    price: 360,
     category: "lunch",
     image_url: "https://images.unsplash.com/photo-1563379091339-03246963d4a9?w=400&h=300&fit=crop"
   },
@@ -17,7 +17,7 @@ const mockMenuItems = [
     id: 2,
     name: "Butter Chicken",
     description: "Creamy and rich curry with tender chicken pieces",
-    price: 18.99,
+    price: 250,
     category: "dinner",
     image_url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
   },
@@ -25,7 +25,7 @@ const mockMenuItems = [
     id: 3,
     name: "Masala Dosa",
     description: "Crispy rice crepe filled with spiced potato mixture",
-    price: 12.99,
+    price: 180,
     category: "breakfast",
     image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop"
   },
@@ -41,7 +41,7 @@ const mockMenuItems = [
     id: 5,
     name: "Dal Makhani",
     description: "Creamy black lentils slow-cooked to perfection",
-    price: 11.99,
+    price: 230,
     category: "dinner",
     image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop"
   },
@@ -49,7 +49,7 @@ const mockMenuItems = [
     id: 6,
     name: "Aloo Paratha",
     description: "Whole wheat flatbread stuffed with spiced potatoes",
-    price: 9.99,
+    price: 100,
     category: "breakfast",
     image_url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
   },
@@ -57,7 +57,7 @@ const mockMenuItems = [
     id: 7,
     name: "Chicken Tikka Masala",
     description: "Grilled chicken in creamy tomato sauce",
-    price: 16.99,
+    price: 280,
     category: "dinner",
     image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop"
   },
@@ -65,7 +65,7 @@ const mockMenuItems = [
     id: 8,
     name: "Vegetable Biryani",
     description: "Fragrant rice with mixed vegetables and spices",
-    price: 13.99,
+    price: 180,
     category: "lunch",
     image_url: "https://images.unsplash.com/photo-1563379091339-03246963d4a9?w=400&h=300&fit=crop"
   },
@@ -73,7 +73,7 @@ const mockMenuItems = [
     id: 9,
     name: "Samosa",
     description: "Crispy pastry filled with spiced potatoes",
-    price: 4.99,
+    price: 25,
     category: "snacks",
     image_url: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop"
   }
@@ -104,7 +104,6 @@ export default function OrderNow() {
   const getItemQuantity = (itemId) => {
     return cartItems.filter(item => item.id === itemId).length;
   };
-
   // Calculate total
   const total = cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
 

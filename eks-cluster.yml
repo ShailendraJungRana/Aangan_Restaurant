@@ -3,7 +3,7 @@ kind: ClusterConfig
 
 metadata:
   name: demo-eks-cluster
-  region: ap-south-1
+  region: us-east-1
   version: "1.29"
 
 nodeGroups:

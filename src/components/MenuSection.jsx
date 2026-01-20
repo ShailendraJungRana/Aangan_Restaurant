@@ -5,6 +5,13 @@ import { useCart } from "../context/CartContext";
 // import { Badge } from "@/components/ui/badge";
 // import { Card, CardContent } from "@/components/ui/card";
 import { Plus, ShoppingCart } from "lucide-react";
+import aloo  from "../assets/alooparatha.jpg"
+import biryani  from "../assets/chicken-biryani.jpg"
+import dosa  from "../assets/masala-dosa.jpg"
+import tikka  from "../assets/panner-tikka.webp"
+import samosa  from "../assets/samosa.webp"
+import dal  from "../assets/DAL-MAKHANI.jpg"
+
 
 const categories = [
   { id: 'recommended', label: 'Recommended' },
@@ -20,15 +27,15 @@ const mockMenuItems = [
     id: 1,
     name: "Chicken Biryani",
     description: "Aromatic rice dish with tender chicken and exotic spices",
-    price: 15.99,
+    price: 300,
     category: "lunch",
-    image_url: "https://images.unsplash.com/photo-1563379091339-03246963d4a9?w=400&h=300&fit=crop"
+    image_url: biryani
   },
   {
     id: 2,
     name: "Butter Chicken",
     description: "Creamy and rich curry with tender chicken pieces",
-    price: 18.99,
+    price: 260,
     category: "dinner",
     image_url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
   },
@@ -36,33 +43,33 @@ const mockMenuItems = [
     id: 3,
     name: "Masala Dosa",
     description: "Crispy rice crepe filled with spiced potato mixture",
-    price: 12.99,
+    price: 230,
     category: "breakfast",
-    image_url: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop"
+    image_url: dosa
   },
   {
     id: 4,
     name: "Paneer Tikka",
     description: "Grilled cottage cheese with aromatic spices",
-    price: 14.99,
+    price: 280,
     category: "snacks",
-    image_url: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop"
+    image_url: tikka
   },
   {
     id: 5,
     name: "Dal Makhani",
     description: "Creamy black lentils slow-cooked to perfection",
-    price: 11.99,
+    price:230,
     category: "dinner",
-    image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop"
+    image_url: dal
   },
   {
     id: 6,
     name: "Aloo Paratha",
     description: "Whole wheat flatbread stuffed with spiced potatoes",
-    price: 9.99,
+    price: 100,
     category: "breakfast",
-    image_url: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=300&fit=crop"
+    image_url: aloo
   }
 ];
 
