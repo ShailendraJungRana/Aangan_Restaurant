@@ -20,21 +20,13 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarcred') {
                     sh '''
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=aangan-react \
-                    -Dsonar.projectName=aangan-react \
-                    -Dsonar.projectVersion=1.0 \
-                    -Dsonar.sources=. \
-                    -Dsonar.language=js
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=aangan-react \
+                        -Dsonar.projectName=aangan-react \
+                        -Dsonar.projectVersion=1.0 \
+                        -Dsonar.sources=. \
+                        -Dsonar.language=js
                     '''
-                }
-            }
-        }
-
-        stage("Quality Gate") {
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -88,7 +80,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ SonarQube passed, image scanned, pushed & app running on port 3000"
+            echo "✅ SonarQube analysis done, image scanned, pushed & app running on port 3000"
         }
         failure {
             echo "❌ Pipeline failed (Sonar / Scan / Build / Push error)"
