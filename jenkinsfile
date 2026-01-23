@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "shailendrajr/test_hub:v1"
         CONTAINER_NAME = "aangan-react-container"
         DOCKERHUB_CREDS = credentials("dockerhub-creds")
+        scannerHome = tool 'sonar8.0'
     }
 
     stages {
@@ -12,6 +13,29 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 checkout scm
+            }
+        }
+
+        stage("SonarQube Analysis") {
+            steps {
+                withSonarQubeEnv('sonarcred') {
+                    sh '''
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=aangan-react \
+                    -Dsonar.projectName=aangan-react \
+                    -Dsonar.projectVersion=1.0 \
+                    -Dsonar.sources=. \
+                    -Dsonar.language=js
+                    '''
+                }
+            }
+        }
+
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
@@ -64,10 +88,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Image scanned, pushed to Docker Hub & app running on port 3000"
+            echo "✅ SonarQube passed, image scanned, pushed & app running on port 3000"
         }
         failure {
-            echo "❌ Pipeline failed (Scan / Build / Push error)"
+            echo "❌ Pipeline failed (Sonar / Scan / Build / Push error)"
         }
     }
 }
