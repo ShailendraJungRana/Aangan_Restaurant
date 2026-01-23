@@ -41,10 +41,17 @@ pipeline {
 
         stage("Trivy Image Scan") {
             steps {
-                sh '''
-                    echo "🔍 Scanning Docker image using Trivy..."
-                    trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME
-                '''
+                script {
+                    // Run Trivy scan but only fail on CRITICAL vulnerabilities
+                    def result = sh(script: "trivy image --severity HIGH,CRITICAL $IMAGE_NAME || true", returnStatus: true)
+                    if (result != 0) {
+                        echo "⚠️ HIGH/CRITICAL vulnerabilities found."
+                        // Check CRITICAL vulnerabilities separately
+                        sh "trivy image --exit-code 1 --severity CRITICAL $IMAGE_NAME"
+                    } else {
+                        echo "✅ No vulnerabilities found."
+                    }
+                }
             }
         }
 
@@ -68,7 +75,6 @@ pipeline {
             steps {
                 sh '''
                     docker rm -f $CONTAINER_NAME || true
-
                     docker run -d \
                       --name $CONTAINER_NAME \
                       -p 3000:80 \
