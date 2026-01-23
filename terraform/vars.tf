@@ -4,10 +4,10 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "instance_type" {
-  description = "EC2 instance type"
+variable "ami" {
+  description = "AMI ID"
   type        = string
-  default     = "t2.small"
+  default     = "ami-0ecb62995f68bb549"
 }
 
 variable "key_name" {
@@ -22,13 +22,14 @@ variable "security_group_id" {
   default     = "sg-0def8f34702957871"
 }
 
-variable "instance_name" {
-  description = "Name tag for EC2 instance"
-  type        = string
-  default     = "demo-ec2-instance"
-}
-variable "ami" {
-  description = "ami"
-  type        = string
-  default     = "ami-0ecb62995f68bb549"
+# 👇 NEW: Define 3 instances with different sizes
+variable "ec2_instances" {
+  description = "EC2 instances with their instance types"
+  type        = map(string)
+
+  default = {
+    demo-ec2-1 = "t2.small"
+    demo-ec2-2 = "t2.small"
+    demo-ec2-3 = "t2.medium" # larger than the other two
+  }
 }

@@ -1,1 +1,3 @@
-ec2-1 ansible_host=54.196.140.173 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem
+demo-ec2-1 ansible_host=98.93.218.8 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem
+demo-ec2-2 ansible_host=54.234.47.154 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem
+demo-ec2-3 ansible_host=13.217.198.215 ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem

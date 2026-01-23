@@ -1,7 +1,14 @@
+
+
+
 #!/bin/bash
 
-terraform output -raw instance_public_ips | \
-awk '{print "ec2-1 ansible_host="$1" ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem"}' \
+# Clear old inventory
 > inventory
+
+terraform output -json instance_public_ips | jq -r '
+to_entries[] |
+"\(.key) ansible_host=\(.value) ansible_user=ubuntu ansible_ssh_private_key_file=./shailendra_key.pem"
+' >> inventory
 
 echo "✅ Inventory file updated!"

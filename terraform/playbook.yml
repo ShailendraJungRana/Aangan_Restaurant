@@ -1,46 +1,298 @@
 ---
-- name: Install Jenkins on EC2
-  hosts: all
+########################################################
+# JENKINS — demo-ec2-1
+########################################################
+- name: Install Jenkins
+  hosts: demo-ec2-1
   become: true
 
   tasks:
-    - name: Update apt cache
+    - name: Clean old Jenkins configs
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/apt/sources.list.d/jenkins.list
+        - /usr/share/keyrings/jenkins.gpg
+        - /usr/share/keyrings/jenkins-keyring.gpg
+        - /usr/share/keyrings/jenkins-keyring.asc
+
+    - name: Clean apt cache
+      shell: rm -rf /var/lib/apt/lists/*
+
+    - name: Update apt
       apt:
         update_cache: yes
 
-    - name: Install required packages
+    - name: Install Java
       apt:
         name:
-          - fontconfig
           - openjdk-21-jre
-          - maven
+          - fontconfig
+          - curl
         state: present
 
-    - name: Add Jenkins GPG key
+    - name: Create Jenkins user
+      user:
+        name: jenkins
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Create Jenkins dirs
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: jenkins
+        group: jenkins
+      loop:
+        - /opt/jenkins
+        - /var/lib/jenkins
+        - /var/log/jenkins
+
+    - name: Download Jenkins WAR
       get_url:
-        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-        dest: /usr/share/keyrings/jenkins-keyring.asc
-        mode: '0644'
+        url: https://get.jenkins.io/war-stable/latest/jenkins.war
+        dest: /opt/jenkins/jenkins.war
+        owner: jenkins
+        group: jenkins
+        mode: '0755'
 
-    - name: Add Jenkins repository
-      apt_repository:
-        repo: >
-          deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]
-          https://pkg.jenkins.io/debian-stable binary/
-        state: present
-        filename: jenkins
+    - name: Jenkins systemd service
+      copy:
+        dest: /etc/systemd/system/jenkins.service
+        content: |
+          [Unit]
+          Description=Jenkins
+          After=network.target
 
-    - name: Update apt cache after adding Jenkins repo
-      apt:
-        update_cache: yes
+          [Service]
+          User=jenkins
+          ExecStart=/usr/bin/java -jar /opt/jenkins/jenkins.war
+          Restart=always
 
-    - name: Install Jenkins
-      apt:
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Start Jenkins
+      systemd:
         name: jenkins
-        state: present
-
-    - name: Ensure Jenkins service is started and enabled
-      service:
-        name: jenkins
-        state: started
         enabled: yes
+        daemon_reload: yes
+        state: started
+
+
+########################################################
+# PROMETHEUS + GRAFANA — demo-ec2-2
+########################################################
+- name: Install Prometheus & Grafana
+  hosts: demo-ec2-2
+  become: true
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - wget
+          - curl
+          - unzip
+          - ca-certificates
+        update_cache: yes
+        state: present
+
+    - name: Install Prometheus
+      shell: |
+        cd /tmp
+        wget https://github.com/prometheus/prometheus/releases/download/v2.53.3/prometheus-2.53.3.linux-amd64.tar.gz
+        tar xvf prometheus-2.53.3.linux-amd64.tar.gz
+        cp prometheus-2.53.3.linux-amd64/prometheus /usr/local/bin/
+      args:
+        creates: /usr/local/bin/prometheus
+
+    - name: Add Grafana GPG key
+      shell: |
+        curl -fsSL https://apt.grafana.com/gpg.key | gpg --dearmor -o /usr/share/keyrings/grafana.gpg
+      args:
+        creates: /usr/share/keyrings/grafana.gpg
+
+    - name: Add Grafana repo
+      copy:
+        dest: /etc/apt/sources.list.d/grafana.list
+        content: |
+          deb [signed-by=/usr/share/keyrings/grafana.gpg] https://apt.grafana.com stable main
+
+    - name: Install Grafana
+      apt:
+        name: grafana
+        update_cache: yes
+        state: present
+
+    - name: Start Grafana
+      systemd:
+        name: grafana-server
+        enabled: yes
+        state: started
+
+
+# ########################################################
+# # SONARQUBE — demo-ec2-3 (FULLY FIXED)
+# ########################################################
+# - name: Install SonarQube
+#   hosts: demo-ec2-3
+#   become: true
+
+#   tasks:
+#     - name: Kernel tuning for SonarQube
+#       sysctl:
+#         name: "{{ item.name }}"
+#         value: "{{ item.value }}"
+#         state: present
+#         reload: yes
+#       loop:
+#         - { name: "vm.max_map_count", value: "262144" }
+#         - { name: "fs.file-max", value: "65536" }
+
+#     - name: Install dependencies
+#       apt:
+#         name:
+#           - openjdk-17-jdk
+#           - unzip
+#           - ca-certificates
+#         update_cache: yes
+#         state: present
+
+#     - name: Create sonar user
+#       user:
+#         name: sonar
+#         shell: /bin/bash
+#         create_home: yes
+
+#     - name: Download SonarQube
+#       get_url:
+#         url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.5.0.2117.zip
+#         dest: /opt/sonarqube.zip
+#         mode: '0644'
+
+#     - name: Extract SonarQube
+#       unarchive:
+#         src: /opt/sonarqube.zip
+#         dest: /opt/
+#         remote_src: yes
+#         creates: /opt/sonarqube-10.5.0.2117
+
+#     - name: Rename directory
+#       command: mv /opt/sonarqube-10.5.0.2117 /opt/sonarqube
+#       args:
+#         creates: /opt/sonarqube
+
+#     - name: Fix ownership
+#       file:
+#         path: /opt/sonarqube
+#         owner: sonar
+#         group: sonar
+#         recurse: yes
+
+#     - name: SonarQube systemd service
+#       copy:
+#         dest: /etc/systemd/system/sonarqube.service
+#         content: |
+#           [Unit]
+#           Description=SonarQube
+#           After=network.target
+
+#           [Service]
+#           Type=forking
+#           User=sonar
+#           ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+#           ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+#           Restart=always
+#           LimitNOFILE=65536
+#           LimitNPROC=4096
+
+#           [Install]
+#           WantedBy=multi-user.target
+
+#     - name: Start SonarQube
+#       systemd:
+#         name: sonarqube
+#         enabled: yes
+#         daemon_reload: yes
+#         state: started
+########################################################
+# SONARQUBE — demo-ec2-3 (FIXED, WILL RUN)
+########################################################
+- name: Install SonarQube (LTS)
+  hosts: demo-ec2-3
+  become: true
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - openjdk-17-jdk
+          - unzip
+          - curl
+        update_cache: yes
+        state: present
+
+    - name: Create sonar user
+      user:
+        name: sonar
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Download SonarQube LTS (403-safe)
+      get_url:
+        url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.6.92038.zip
+        dest: /opt/sonarqube.zip
+        mode: '0644'
+        headers:
+          User-Agent: "Mozilla/5.0"
+
+    - name: Extract SonarQube
+      unarchive:
+        src: /opt/sonarqube.zip
+        dest: /opt/
+        remote_src: yes
+        creates: /opt/sonarqube-9.9.6.92038
+
+    - name: Rename directory
+      command: mv /opt/sonarqube-9.9.6.92038 /opt/sonarqube
+      args:
+        creates: /opt/sonarqube
+
+    - name: Fix ownership
+      file:
+        path: /opt/sonarqube
+        owner: sonar
+        group: sonar
+        recurse: yes
+
+    - name: Create SonarQube systemd service
+      copy:
+        dest: /etc/systemd/system/sonarqube.service
+        content: |
+          [Unit]
+          Description=SonarQube
+          After=network.target
+
+          [Service]
+          Type=forking
+          User=sonar
+          ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+          ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+          Restart=always
+          LimitNOFILE=65536
+          LimitNPROC=4096
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Start SonarQube
+      systemd:
+        name: sonarqube
+        enabled: yes
+        state: started

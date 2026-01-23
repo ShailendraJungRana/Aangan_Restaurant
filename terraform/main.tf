@@ -1,18 +1,20 @@
 resource "aws_instance" "demo_ec2" {
+  for_each = var.ec2_instances
+
   ami                    = var.ami
-  instance_type          = var.instance_type
+  instance_type          = each.value
   key_name               = var.key_name
   vpc_security_group_ids = [var.security_group_id]
 
   tags = {
-    Name = var.instance_name
+    Name = each.key
   }
 }
 
 output "instance_public_ips" {
-  description = "Public IP of the EC2 instance"
-  value       = aws_instance.demo_ec2.public_ip
+  description = "Public IPs of all EC2 instances"
+  value = {
+    for name, instance in aws_instance.demo_ec2 :
+    name => instance.public_ip
+  }
 }
-
-
-
