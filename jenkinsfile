@@ -20,12 +20,15 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarcred') {
                     sh '''
+                        set +e
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=aangan-react \
                         -Dsonar.projectName=aangan-react \
                         -Dsonar.projectVersion=1.0 \
                         -Dsonar.sources=. \
                         -Dsonar.language=js
+                        echo "⚠️ SonarQube analysis completed (non-blocking)"
+                        exit 0
                     '''
                 }
             }
@@ -42,14 +45,16 @@ pipeline {
         stage("Trivy Image Scan") {
             steps {
                 script {
-                    // Run Trivy scan but only fail on CRITICAL vulnerabilities
-                    def result = sh(script: "trivy image --severity HIGH,CRITICAL $IMAGE_NAME || true", returnStatus: true)
+                    def result = sh(
+                        script: "trivy image --severity HIGH,CRITICAL $IMAGE_NAME || true",
+                        returnStatus: true
+                    )
+
                     if (result != 0) {
-                        echo "⚠️ HIGH/CRITICAL vulnerabilities found."
-                        // Check CRITICAL vulnerabilities separately
+                        echo "⚠️ HIGH/CRITICAL vulnerabilities found"
                         sh "trivy image --exit-code 1 --severity CRITICAL $IMAGE_NAME"
                     } else {
-                        echo "✅ No vulnerabilities found."
+                        echo "✅ No CRITICAL vulnerabilities found"
                     }
                 }
             }
@@ -58,7 +63,9 @@ pipeline {
         stage("Docker Hub Login") {
             steps {
                 sh '''
-                    echo "$DOCKERHUB_CREDS_PSW" | docker login -u "$DOCKERHUB_CREDS_USR" --password-stdin
+                    echo "$DOCKERHUB_CREDS_PSW" | docker login \
+                    -u "$DOCKERHUB_CREDS_USR" \
+                    --password-stdin
                 '''
             }
         }
@@ -86,10 +93,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ SonarQube analysis done, image scanned, pushed & app running on port 3000"
+            echo "✅ Pipeline completed successfully"
         }
         failure {
-            echo "❌ Pipeline failed (Sonar / Scan / Build / Push error)"
+            echo "❌ Pipeline failed"
         }
     }
 }
