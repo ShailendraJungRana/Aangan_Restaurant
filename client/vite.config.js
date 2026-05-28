@@ -54,7 +54,7 @@ export default defineConfig({
   },
   server: {
     port: DEV_PORT,
-    strictPort: true,
+    strictPort: false,
     open: '/',
     proxy: {
       '/api': {

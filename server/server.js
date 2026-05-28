@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 // Serve uploaded files as static assets
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Health check (works even when DB is down)
+// Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({
     status: isDbReady() ? "ok" : "degraded",
