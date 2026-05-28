@@ -1,0 +1,42 @@
+# Dependencies (each app installs its own)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+dist/
+client/dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+server/.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Uploads (user-generated)
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Vite
+*.local
+
+# Coverage / cache
+coverage/
+.cache/
+.eslintcache
+
+# Legacy root src only (do not use bare `src/` — it ignores client/src for Tailwind)
+/src/
